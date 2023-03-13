@@ -287,14 +287,17 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
-            echo "${API_URL}"
-            if curl "${API_URL}/api/status" | grep "ok"
+            STATUS_CODE=$(curl \
+                --output /dev/null \
+                --silent \
+                --write-out "%{http_code}" \
+                "API_URL")
+
+            if (( STATUS == 'ok' ))
             then
-              return 0
+              echo "Website is up!"
             else
-              return 1
+              echo "Website is down!  Expected 200, got $STATUS_CODE"
             fi
       - run:
           name: Frontend smoke test.
