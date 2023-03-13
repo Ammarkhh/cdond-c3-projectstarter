@@ -183,8 +183,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            apk add --update ansible
-            apk add --aws-cli
+            apk add ansible gzip aws-cli openssh-client -y
       #       ls 
       #       pwd
       #       cd .circleci/ansible
