@@ -167,7 +167,8 @@ jobs:
             - project/.circleci/ansible/inventory.txt
 
   configure-infrastructure:
-    docker: ansible/ansible
+    docker: 
+      image: ansible/ansible
       # Docker image here that supports Ansible
     steps:
       - checkout
