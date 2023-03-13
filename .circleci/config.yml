@@ -168,8 +168,7 @@ jobs:
 
   configure-infrastructure:
     docker: 
-      - image: python:3.9.16-alpine3.17
-      # Docker image here that supports Ansible
+      - image: mareimorsy/aws-node
     steps:
       - checkout
       - add_ssh_keys:
@@ -183,14 +182,13 @@ jobs:
       - run:
           name: Configure server
           command: |
-            apk add ansible gzip aws-cli openssh-client -y
-      #       ls 
-      #       pwd
-      #       cd .circleci/ansible
-      #       aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
-      #       cat inventory.txt
-      #       ansible-playbook -i inventory.txt configure-server.yml
-      # # Here's where you will add some code to rollback on failure      
+            ls 
+            pwd
+            cd .circleci/ansible
+            aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml -vv
+      # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
 #     docker:
