@@ -104,10 +104,12 @@ jobs:
       - run:
           name: scan-frontend
           command: |
-            cd frontend
+            cd frontend  
             npm install
-            npm audit fix --audit-level=critical --force
-            npm audit
+            npm audit fix
+            npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
+            npm audit --audit-level=critical
 
 
 
@@ -117,15 +119,17 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      # - restore_cache:
+      #     keys: [backend-build]
       - run:
           name: scan-backend
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical --force
-            npm audit
+            npm audit fix
+            npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
+            npm audit --audit-level=critical
 
 
 #   deploy-infrastructure:
