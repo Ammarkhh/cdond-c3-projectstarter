@@ -198,7 +198,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            export TYPEORM_HOST={{ lookup('env', 'TYPEORM_HOST')}}
+            export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST')}}"
             cd backend
             npm install
             npm run premigrations
