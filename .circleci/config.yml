@@ -175,10 +175,10 @@ jobs:
           fingerprints: ["22:7a:3c:e3:e3:67:86:ef:ec:67:97:fd:e4:a8:43:4f"]
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            apk add ansible gzip openssh-client -y
+      # - run:
+      #     name: Install dependencies
+      #     command: |
+      #       apk add ansible gzip openssh-client -y
       - run:
           name: Configure server
           command: |
