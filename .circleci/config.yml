@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs: 
+    slack: circleci/slack@4.10.1
+
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -12,9 +15,9 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:5}
+            # aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:5}
             aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
-            aws cloudformation delete-stack --stack-name frontend-<< parameters.Workflow_ID >>
+            aws cloudformation delete-stack --stack-name frontend-05738
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -298,31 +301,31 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            URL="http://udapeople-05738.s3-website-us-east-1.amazonaws.com/#/employees"            
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              # Change this to 0 after the job fails
-              exit 0
+              exit 1
             else
               exit 1
             fi
+      - destroy_environment
       # Here's where you will add some code to rollback on failure  
 
-#   cloudfront-update:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Update cloudfront distribution
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
+  cloudfront-update:
+    docker:
+      - image: mareimorsy/aws-node
+    steps:
+      # Checkout code from git
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            # your code here
+      # Here's where you will add some code to rollback on failure  
 
 # cleanup:
 #     docker:
