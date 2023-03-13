@@ -248,18 +248,25 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["22:7a:3c:e3:e3:67:86:ef:ec:67:97:fd:e4:a8:43:4f"]
+
+      - attach_workspace:
+          at: project/.circleci/ansible/inventory.txt
+
       - run:
           name: Deploy backend
           command: |
-            cat .circleci/ansible/inventory.txt
+            cat inventory.txt 
             cd backend
             npm i
             npm run build
-            tar -czf artifact.tar.gz dist/* package* .env
-            cp artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
-            ls ../.circleci/ansible/roles/deploy/
-            cd ../.circleci/ansible
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
+
 
       # Here's where you will add some code to rollback on failure  
 
