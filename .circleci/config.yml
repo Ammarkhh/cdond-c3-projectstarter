@@ -287,17 +287,12 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            STATUS_CODE=$(curl \
-                --output /dev/null \
-                --silent \
-                --write-out "%{http_code}" \
-                "API_URL")
-
-            if (( STATUS == 'ok' ))
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
             then
-              echo "Website is up!"
+              return 0
             else
-              echo "Website is down!  Expected 200, got $STATUS_CODE"
+              return 1
             fi
       - run:
           name: Frontend smoke test.
