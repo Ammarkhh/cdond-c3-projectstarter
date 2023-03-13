@@ -111,7 +111,6 @@ jobs:
             npm install
             npm audit fix
             npm audit fix --force --audit-level=critical
-            npm audit fix --force --audit-level=critical
             npm audit --audit-level=critical
 
   scan-backend:
@@ -127,7 +126,6 @@ jobs:
             cd backend
             npm install
             npm audit fix
-            npm audit fix --force --audit-level=critical
             npm audit fix --force --audit-level=critical
             npm audit --audit-level=critical
 
@@ -224,7 +222,7 @@ jobs:
             npm install
             npm run build:prod
             # aws s3 sync dist s3://udapeople-project
-            aws s3 cp dist s3://udapeople-dsfdsfdsfgsdgsdsdg --recursive                    
+            aws s3 cp dist s3://udapeople-05738 --recursive                    
       # # Checkout code from git
       # - run:
       #     name: Install dependencies
