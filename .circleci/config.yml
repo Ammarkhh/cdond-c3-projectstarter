@@ -330,10 +330,15 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
+            echo "$ID"
+            ID=$(curl -k https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1)    
+            echo "$ID"
+            echo "$ID"
+            echo "$ID"
             aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkflowID="$ID" \
-              --stack-name InitialStack
+            --template-file .circleci/files/cloudfront.yml \
+            --parameter-overrides WorkflowID="$ID" \
+            --stack-name InitialStack
 
 
 # cleanup:
