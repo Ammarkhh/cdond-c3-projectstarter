@@ -332,7 +332,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkflowID=udapeople-"$ID" \
+              --parameter-overrides WorkflowID="$ID" \
               --stack-name InitialStack
 
 
