@@ -347,8 +347,9 @@ jobs:
           command: |
             olds3=$(curl -k  https://kvdb.io/Mbix8LFtJ26Nn95mJt8FyJ/1)
             echo "$olds3"
-            echo OldWorkflowID: $OldWorkflowID 
             aws s3 rm "s3://udapeople-$olds3" --recursive
+            aws s3 rb "s3://udapeople-$olds3" --force 
+            echo "empty the s3 buckket and then delete"
             
 
 workflows:
