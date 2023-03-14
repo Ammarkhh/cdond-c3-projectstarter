@@ -347,10 +347,8 @@ jobs:
           command: |
             OldWorkflowID=$(curl -k https://kvdb.io/Mbix8LFtJ26Nn95mJt8FyJ/1)
             echo "$OldWorkflowID"
-            then
-              echo "s3 deleted"
-              aws s3 rm "s3://udapeople-$OldWorkflowID" --recursive
-            fi
+            echo "s3 deleted"
+            aws s3 rm "s3://udapeople-$OldWorkflowID" --recursive
             
 
 workflows:
