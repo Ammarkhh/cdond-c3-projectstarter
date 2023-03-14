@@ -331,7 +331,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkflowID=udapeople-"$s3-id" \
+              --parameter-overrides WorkflowID=udapeople-"curl "https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1"" \
               --stack-name InitialStack
 
 
