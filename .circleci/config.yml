@@ -317,21 +317,21 @@ jobs:
       - image: mareimorsy/aws-node
     steps:
       - checkout
-      # - run:
-      #     name: get new s3 bukket id
-      #     command: |
-      #       # export OLD_WORKFLOW_ID=$(aws cloudformation \
-      #       # list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-      #       # --no-paginate --output text)
-      #       # echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
-      #       # curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
-      #       $s3id=curl "https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1" 
+      - run:
+          name: get new s3 bukket id
+            # export OLD_WORKFLOW_ID=$(aws cloudformation \
+            # list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            # --no-paginate --output text)
+            # echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
+            # curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+          command: |
+            ID=$(curl https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1)    
       - run:
           name: Update cloudfront distribution
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkflowID=udapeople-"curl "https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1"" \
+              --parameter-overrides WorkflowID=udapeople-"$ID" \
               --stack-name InitialStack
 
 
