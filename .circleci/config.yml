@@ -317,24 +317,20 @@ jobs:
       - image: mareimorsy/aws-node
     steps:
       - checkout
-      - run:
-          name: get new s3 bukket id
-            # export OLD_WORKFLOW_ID=$(aws cloudformation \
-            # list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            # --no-paginate --output text)
-            # echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
-            # curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
-          command: |
-            ID=$(curl -k https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1)    
-            echo "$ID"
+      # - run:
+      #     name: get new s3 bukket id
+      #       # export OLD_WORKFLOW_ID=$(aws cloudformation \
+      #       # list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+      #       # --no-paginate --output text)
+      #       # echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
+      #       # curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+      #     command: |
+      #       ID=$(curl -k https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1)    
+      #       echo "$ID"
       - run:
           name: Update cloudfront distribution
           command: |
-            echo "$ID"
             ID=$(curl -k https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1)    
-            echo "$ID"
-            echo "$ID"
-            echo "$ID"
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --parameter-overrides WorkflowID="$ID" \
@@ -389,7 +385,7 @@ workflows:
       #     requires: [run-migrations]
       # - smoke-test
           # requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update
+      # - cloudfront-update
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
