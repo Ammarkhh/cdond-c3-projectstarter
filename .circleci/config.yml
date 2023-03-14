@@ -325,13 +325,13 @@ jobs:
             # --no-paginate --output text)
             # echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
             # curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
-            $s3-id="curl https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1" 
+            $s3id="curl https://kvdb.io/CUMHMDCNoTSK69FcPzWJDa/1" 
       - run:
           name: Update cloudfront distribution
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkflowID=udapeople-"s3-id" \
+              --parameter-overrides WorkflowID=udapeople-"$s3-id" \
               --stack-name InitialStack
 
 
