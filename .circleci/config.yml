@@ -206,7 +206,7 @@ jobs:
             cd backend
             npm install
             npm run migrations
-            curl -d '1' https://kvdb.io/${kvdb}/migrations
+            # curl -d '1' https://kvdb.io/${kvdb}/migrations
  
   deploy-frontend:
     docker:
