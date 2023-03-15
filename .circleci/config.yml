@@ -138,10 +138,10 @@ jobs:
           command: |
             yum install -y tar gzip
 
-      # - run:
-      #     name: save infrastructure id for later use
-      #     command: |
-      #       curl -d '${CIRCLE_WORKFLOW_ID:0:5}' https://kvdb.io/${kvdb}/infrastructure
+      - run:
+          name: save infrastructure id for later use
+          command: |
+            curl -d '${CIRCLE_WORKFLOW_ID:0:5}' https://kvdb.io/${kvdb}/infrastructure
             
       - run:
           name: Ensure back-end infrastructure exists
@@ -151,24 +151,24 @@ jobs:
               --tags project=udapeople \
               --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:5}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
-      # - run:
-      #     name: Ensure front-end infrastructure exist
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/frontend.yml \
-      #         --tags project=udapeople \
-      #         --stack-name "frontend-${CIRCLE_WORKFLOW_ID:0:5}" \
-      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
-      # - run:
-      #     name: Add back-end ip to ansible inventory
-      #     command: |
-      #       aws ec2 describe-instances\
-      #       --filters Name=tag:project,Values=udapeople\
-      #       --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - project/.circleci/ansible/inventory.txt
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=udapeople \
+              --stack-name "frontend-${CIRCLE_WORKFLOW_ID:0:5}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances\
+            --filters Name=tag:project,Values=udapeople\
+            --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
 
   configure-infrastructure:
     docker: 
@@ -344,18 +344,18 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      - deploy-infrastructure
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
       #         only: [master]
@@ -363,12 +363,11 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [deploy-infrastructure]
+      - deploy-frontend:
+          requires: [deploy-infrastructure]
       #     requires: [run-migrations]
       - deploy-backend:
-          requires: [configure-infrastructure,run-migrations]
-      #     requires: [run-migrations]
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
