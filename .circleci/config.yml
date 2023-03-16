@@ -276,52 +276,6 @@ jobs:
             npm run build
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:5} --recursive
 
-      # - destroy-environment
-      # - revert-migrations
-
-  # deploy-backend:
-    docker:
-      - image: mareimorsy/aws-node
-    steps:
-      - checkout
-      # - install_awscli
-      # - install_ansible
-      # - install_nodejs
-      - add_ssh_keys:
-          fingerprints: ["22:7a:3c:e3:e3:67:86:ef:ec:67:97:fd:e4:a8:43:4f"]
-      - attach_workspace:
-          at: ~/
-      # - restore_cache:
-      #     keys: [backend-build]
-      - run:
-          name: install dependencies
-          command: |
-            cd backend
-            npm install
-      - run:
-          name: package backend
-          command: |
-            cd backend
-            npm run build
-            echo "TYPEORM_ENTITIES=./dist/modules/domain/**/*.entity{.ts,.js}" > .env
-            echo "TYPEORM_HOST=${TYPEORM_HOST}" >> .env
-            echo "TYPEORM_PORT=${TYPEORM_PORT}" >> .env
-            echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> .env
-            echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> .env
-            echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> .env
-            echo "TYPEORM_MIGRATIONS_DIR=./dist/migrations" >> .env
-            echo "TYPEORM_MIGRATIONS=./dist/migrations/*.ts" >> .env
-            tar -czf artifact.tar.gz dist/* package* .env
-            cd ..
-            cp backend/artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
-      - run:
-          name: Deploy backend
-          command: |
-            cd .circleci/ansible
-            aws ec2 describe-instances --filters Name=tag:project,Values=udapeople --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
-            cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -vv
-
   deploy-backend:
     docker:
       - image: mareimorsy/aws-node
@@ -351,6 +305,49 @@ jobs:
             ls ../.circleci/ansible/roles/deploy/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
+
+  # deploy-backend:
+  #   docker:
+  #     - image: mareimorsy/aws-node
+  #   steps:
+  #     - checkout
+  #     # - install_awscli
+  #     # - install_ansible
+  #     # - install_nodejs
+  #     - add_ssh_keys:
+  #         fingerprints: ["22:7a:3c:e3:e3:67:86:ef:ec:67:97:fd:e4:a8:43:4f"]
+  #     - attach_workspace:
+  #         at: ~/
+  #     # - restore_cache:
+  #     #     keys: [backend-build]
+  #     - run:
+  #         name: install dependencies
+  #         command: |
+  #           cd backend
+  #           npm install
+  #     - run:
+  #         name: package backend
+  #         command: |
+  #           cd backend
+  #           npm run build
+  #           echo "TYPEORM_ENTITIES=./dist/modules/domain/**/*.entity{.ts,.js}" > .env
+  #           echo "TYPEORM_HOST=${TYPEORM_HOST}" >> .env
+  #           echo "TYPEORM_PORT=${TYPEORM_PORT}" >> .env
+  #           echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> .env
+  #           echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> .env
+  #           echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> .env
+  #           echo "TYPEORM_MIGRATIONS_DIR=./dist/migrations" >> .env
+  #           echo "TYPEORM_MIGRATIONS=./dist/migrations/*.ts" >> .env
+  #           tar -czf artifact.tar.gz dist/* package* .env
+  #           cd ..
+  #           cp backend/artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
+  #     - run:
+  #         name: Deploy backend
+  #         command: |
+  #           cd .circleci/ansible
+  #           aws ec2 describe-instances --filters Name=tag:project,Values=udapeople --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
+  #           cat inventory.txt
+  #           ansible-playbook -i inventory.txt deploy-backend.yml -vv
 
   smoke-test:
     docker:
@@ -429,20 +426,20 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      # - deploy-infrastructure
+      - deploy-infrastructure
           # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           # filters:
           #   branches:
           #     only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [deploy-infrastructure]
+      - deploy-frontend:
+          requires: [deploy-infrastructure]
           # requires: [run-migrations]
-      - deploy-backend
-          # requires: [configure-infrastructure]
+      - deploy-backend:
+          requires: [configure-infrastructure]
           # requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
