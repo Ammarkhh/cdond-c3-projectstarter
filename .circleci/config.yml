@@ -16,8 +16,8 @@ commands:
           # when: on_fail
           command: |
             # aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
-            aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
+            aws s3 rm s3://udapeople-c402c --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-c402c
 
   install_awscli:
     description: install AWS CLI V2
@@ -387,15 +387,15 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure
+      # - deploy-infrastructure
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
       #         only: [master]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [deploy-infrastructure]
+      - run-migrations
+          # requires: [deploy-infrastructure]
       # - deploy-frontend:
       #     requires: [deploy-infrastructure]
           # requires: [run-migrations]
