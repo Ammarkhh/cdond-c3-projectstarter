@@ -1,0 +1,13 @@
+
+URLS:
+
+
+1-git repository : https://github.com/Ammarkhh/cdond-c3-projectstarter
+
+2-S3 Bucket : http://udapeople-a3132.s3-website-us-east-1.amazonaws.com/
+
+3-CloudFront aka production: http://di6ec3tbbq0s1.cloudfront.net
+
+4-backend-server : http://ec2-44-214-32-66.compute-1.amazonaws.com:3030/api/status
+
+5-prometheus : http://ec2-3-232-177-217.compute-1.amazonaws.com:9090/graph
