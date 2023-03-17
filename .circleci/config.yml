@@ -13,11 +13,11 @@ commands:
     steps:
       - run:
           name: Destroy environments
-          when: on_fail
+          # when: on_fail
           command: |
             # aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
-            # aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-f622c
+            aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
 
   install_awscli:
     description: install AWS CLI V2
@@ -62,7 +62,7 @@ commands:
             # SUCCESS=$(curl --insecure https://kvdb.io/${kvdb}/migrations_<< parameters.Workflow_ID >>)
             # if(( $SUCCESS == 1 )); 
             # then
-              cd ~/project/backend
+              cd backend
               npm install
               npm run migration:revert
             # fi
@@ -387,7 +387,7 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      # - deploy-infrastructure
+      - deploy-infrastructure
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
@@ -395,7 +395,7 @@ workflows:
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       - run-migrations
-      #     requires: [configure-infrastructure]
+          requires: [deploy-infrastructure]
       # - deploy-frontend:
       #     requires: [deploy-infrastructure]
           # requires: [run-migrations]
