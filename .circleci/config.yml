@@ -337,7 +337,7 @@ jobs:
             else
               exit 1
             fi
-      # - destroy-environment
+      - destroy-environment
   
   cloudfront-update:
     docker:
@@ -362,7 +362,8 @@ jobs:
       - run:
           name: Remove old s3
           command: |
-            olds3=$(curl -k  https://kvdb.io/Mbix8LFtJ26Nn95mJt8FyJ/oldInfrastructure)
+            # olds3=$(curl -k  https://kvdb.io/Mbix8LFtJ26Nn95mJt8FyJ/oldInfrastructure)
+            olds3='${CIRCLE_WORKFLOW_ID:0:5}'
             echo "$olds3"
             aws s3 rm "s3://udapeople-$olds3" --recursive
             aws s3 rb "s3://udapeople-$olds3" --force 
@@ -382,7 +383,7 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      # - deploy-infrastructure:
+      - deploy-infrastructure
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
@@ -391,13 +392,14 @@ workflows:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
+      - deploy-frontend:
+          requires: [deploy-infrastructure]
+          # requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]
-      - smoke-test
+      # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [deploy-frontend]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - cloudfront-update:
+          requires: [deploy-frontend]
+      - cleanup:
+          requires: [cloudfront-update]
