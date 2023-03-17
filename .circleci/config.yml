@@ -363,7 +363,7 @@ jobs:
           name: Remove old s3
           command: |
             # olds3=$(curl -k  https://kvdb.io/Mbix8LFtJ26Nn95mJt8FyJ/oldInfrastructure)
-            olds3='${CIRCLE_WORKFLOW_ID:0:5}'
+            olds3='f622c'
             echo "$olds3"
             aws s3 rm "s3://udapeople-$olds3" --recursive
             aws s3 rb "s3://udapeople-$olds3" --force 
